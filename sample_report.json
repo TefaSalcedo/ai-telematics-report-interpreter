@@ -1,0 +1,25 @@
+{
+  "cliente": "Empresa Demo",
+  "periodo": "01-02-2025 a 07-02-2025",
+  "indicadores": {
+    "distancia_total_km": 3200,
+    "consumo_total_litros": 450,
+    "excesos_velocidad": 12,
+    "tiempo_ralenti_minutos": 340,
+    "frenadas_bruscas": 8
+  },
+  "vehiculos": [
+    {
+      "placa": "ABC123",
+      "distancia_km": 1200,
+      "consumo_litros": 160,
+      "excesos_velocidad": 7
+    },
+    {
+      "placa": "XYZ789",
+      "distancia_km": 2000,
+      "consumo_litros": 290,
+      "excesos_velocidad": 5
+    }
+  ]
+}

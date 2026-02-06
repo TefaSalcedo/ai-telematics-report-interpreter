@@ -1,0 +1,15 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files first for better Docker layer caching
+COPY package.json ./
+RUN npm install
+
+# Copy application code
+COPY . .
+
+EXPOSE 3000
+
+# Start the React development server
+CMD ["npm", "start"]
