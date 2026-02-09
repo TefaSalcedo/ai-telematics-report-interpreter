@@ -12,7 +12,7 @@ ai-mini/
 │   │   ├── main.py             # Endpoints de la API
 │   │   ├── models.py           # Modelos de datos (Pydantic)
 │   │   ├── prompts.py          # Prompts para cada perfil
-│   │   └── ai_service.py       # Servicio de conexión con OpenAI
+│   │   └── ai_service.py       # Servicio de conexión con Groq (FREE)
 │   ├── .env.example            # Plantilla de variables de entorno
 │   ├── requirements.txt        # Dependencias de Python
 │   └── Dockerfile
@@ -33,7 +33,7 @@ ai-mini/
 ## Requisitos Previos
 
 - **Docker Desktop** instalado y corriendo
-- **API Key de OpenAI** (obtener en https://platform.openai.com/api-keys)
+- **API Key de Groq (GRATIS)** (obtener en https://console.groq.com/keys)
 
 ## Instalación y Ejecución
 
@@ -45,11 +45,11 @@ Crea el archivo `backend/.env` copiando el ejemplo:
 cp backend/.env.example backend/.env
 ```
 
-Edita `backend/.env` y reemplaza con tu API key real:
+Edita `backend/.env` y reemplaza con tu API key real de Groq:
 
 ```
-OPENAI_API_KEY=sk-tu-api-key-real-aqui
-OPENAI_MODEL=gpt-4o-mini
+GROQ_API_KEY=gsk_tu-api-key-real-aqui
+GROQ_MODEL=llama-3.3-70b-versatile
 ```
 
 ### Paso 2: Levantar con Docker
@@ -144,13 +144,13 @@ npm start
 
 ## Tecnologías
 
-- **Backend**: Python 3.12, FastAPI, OpenAI API, Pydantic
+- **Backend**: Python 3.12, FastAPI, Groq API (FREE), Pydantic
 - **Frontend**: React 18, Lucide Icons, React Markdown
 - **Infraestructura**: Docker, Docker Compose
 
 ## Notas
 
 - Este proyecto **NO** se conecta a Wialon. Usa datos simulados.
-- El modelo por defecto es `gpt-4o-mini` (económico y rápido).
-- Puedes cambiar a `gpt-4o` en el archivo `.env` para respuestas más detalladas.
+- El modelo por defecto es `llama-3.3-70b-versatile` (gratuito y potente via Groq).
+- Otros modelos disponibles en Groq: `llama-3.1-8b-instant`, `mixtral-8x7b-32768`, `gemma2-9b-it`.
 - La documentación automática de la API está en http://localhost:8000/docs

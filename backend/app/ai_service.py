@@ -1,33 +1,37 @@
 """
-AI Service - Handles communication with OpenAI API.
+AI Service - Handles communication with Groq API.
 
 This module sends the telematics report data along with the appropriate
-system prompt (based on user profile) to OpenAI's chat completion API.
+system prompt (based on user profile) to Groq's chat completion API.
+
+Groq provides FREE access to powerful open-source models like Llama 3.3 70B.
+Get your free API key at: https://console.groq.com/keys
 """
 
 import os
 import json
-from openai import OpenAI
+from groq import Groq
 from .prompts import SYSTEM_PROMPTS, USER_PROMPT_TEMPLATE
 
 
-def get_openai_client() -> OpenAI:
+def get_groq_client() -> Groq:
     """
-    Creates and returns an OpenAI client.
-    The API key is read from the OPENAI_API_KEY environment variable.
+    Creates and returns a Groq client.
+    The API key is read from the GROQ_API_KEY environment variable.
     """
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key or api_key == "sk-your-api-key-here":
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key or api_key == "paste-your-groq-api-key-here":
         raise ValueError(
-            "OPENAI_API_KEY is not configured. "
-            "Please set it in the .env file."
+            "GROQ_API_KEY is not configured. "
+            "Please set it in the backend/.env file. "
+            "Get your FREE key at https://console.groq.com/keys"
         )
-    return OpenAI(api_key=api_key)
+    return Groq(api_key=api_key)
 
 
 def interpret_report(report_data: dict, profile: str) -> dict:
     """
-    Sends the report data to OpenAI for interpretation.
+    Sends the report data to Groq for interpretation.
 
     Args:
         report_data: The telematics report as a dictionary.
@@ -47,11 +51,11 @@ def interpret_report(report_data: dict, profile: str) -> dict:
     # Build the user message with the report data
     user_message = USER_PROMPT_TEMPLATE.format(report_json=report_json)
 
-    # Get the model name from environment (default: gpt-4o-mini)
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    # Get the model name from environment (default: llama-3.3-70b-versatile)
+    model = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
-    # Create the OpenAI client and make the API call
-    client = get_openai_client()
+    # Create the Groq client and make the API call
+    client = get_groq_client()
     response = client.chat.completions.create(
         model=model,
         messages=[
