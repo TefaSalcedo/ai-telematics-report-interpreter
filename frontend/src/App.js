@@ -63,23 +63,30 @@ const SAMPLE_REPORT = {
 // Backend API URL - uses environment variable or defaults to localhost
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
-// Severity badge based on gallons
-const SeverityBadge = ({ gal }) => {
+// Severity badge based on TOTAL gallons (discharges + unauthorized loads)
+// Thresholds MUST match prompt section 7 to avoid UI/LLM discrepancy
+const SeverityBadge = ({ gal, events }) => {
   let color, label;
-  if (gal > 50) { color = "#ef4444"; label = "CRÍTICO"; }
-  else if (gal > 20) { color = "#f59e0b"; label = "ALTO"; }
+  // Escalation: >5 events regardless of gallons → one level up
+  const escalated = events > 5;
+  if (gal > 50 || (escalated && gal > 20)) { color = "#ef4444"; label = "CRÍTICO"; }
+  else if (gal > 20 || (escalated && gal > 10)) { color = "#f59e0b"; label = "ALTO"; }
   else if (gal > 10) { color = "#3b82f6"; label = "MEDIO"; }
   else { color = "#94a3b8"; label = "BAJO"; }
   return (
-    <span style={{
-      background: `${color}22`,
-      color: color,
-      padding: "2px 8px",
-      borderRadius: "4px",
-      fontSize: "0.65rem",
-      fontWeight: 700,
-      letterSpacing: "0.5px",
-    }}>{label}</span>
+    <span
+      title={`Total: ${gal.toFixed(1)} gal | ${events} eventos${escalated ? " (escalado por >5 eventos)" : ""}`}
+      style={{
+        background: `${color}22`,
+        color: color,
+        padding: "2px 8px",
+        borderRadius: "4px",
+        fontSize: "0.65rem",
+        fontWeight: 700,
+        letterSpacing: "0.5px",
+        cursor: "help",
+      }}
+    >{label}</span>
   );
 };
 
@@ -347,7 +354,10 @@ function App() {
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         <strong>{v.unidad}</strong>
-                        <SeverityBadge gal={v.total_descarga_gal} />
+                        <SeverityBadge
+                          gal={(v.total_descarga_gal || 0) + (v.total_carga_no_autorizada_gal || 0)}
+                          events={(v.eventos_descarga || 0) + (v.eventos_carga_no_autorizada || 0)}
+                        />
                       </div>
                       <span style={{ color: "var(--color-text-secondary)", fontSize: "0.75rem" }}>
                         {v.eventos_descarga} desc. ({v.total_descarga_gal} gal)

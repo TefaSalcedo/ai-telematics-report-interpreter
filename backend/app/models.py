@@ -20,6 +20,11 @@ class FuelAnomaly(BaseModel):
     ubicacion_final: str = Field(default="", description="End location")
     tanque: str = Field(default="", description="Tank affected (izquierdo, derecho, total)")
     cantidad_gal: float = Field(..., description="Gallons lost in event")
+    estado_vehiculo: Optional[str] = Field(default=None, description="Vehicle state during event: DETENIDO, EN_MARCHA, or null")
+    velocidad_kmh: Optional[float] = Field(default=None, description="Speed in km/h at time of event")
+    motor_encendido: Optional[bool] = Field(default=None, description="Whether engine was on during event")
+    temperatura_c: Optional[float] = Field(default=None, description="Ambient temperature in Celsius")
+    fecha_hora: Optional[str] = Field(default=None, description="Timestamp of the event (ISO 8601)")
 
 
 class UnauthorizedLoad(BaseModel):
@@ -59,6 +64,11 @@ class VehicleAnomaly(BaseModel):
     total_descarga_gal: float = Field(default=0, description="Total gallons discharged")
     eventos_carga_no_autorizada: int = Field(default=0, description="Unauthorized load events")
     total_carga_no_autorizada_gal: float = Field(default=0, description="Gallons loaded at unauthorized sites")
+    tipo_vehiculo: Optional[str] = Field(default=None, description="Vehicle type: tractomula, turbo, sencillo, etc.")
+    tipo_ruta: Optional[str] = Field(default=None, description="Route type: plana, montaña, mixta")
+    tanque_dual: Optional[bool] = Field(default=None, description="Whether vehicle has dual tanks")
+    mantenimiento_reciente: Optional[str] = Field(default=None, description="Recent maintenance description, or null")
+    calibracion_sensor_fecha: Optional[str] = Field(default=None, description="Last EFLS sensor calibration date")
 
 
 class TelematicsReport(BaseModel):

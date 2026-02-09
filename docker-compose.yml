@@ -27,7 +27,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_API_URL=https://nnrkb4ps-8000.use.devtunnels.ms
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
       - WDS_SOCKET_PORT=3001
