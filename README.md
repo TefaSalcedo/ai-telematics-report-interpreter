@@ -1,36 +1,291 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/ap# AI Telematics Fleet Management System
 
-## Getting Started
+**Sistema integral de gestión telemétrica de flotas con análisis inteligente de datos, interpretación con IA y servidor MCP para integración con LLMs.**
 
-First, run the development server:
+Este proyecto unifica dos componentes principales:
+- **AI Telematics Interpreter**: Interfaz web con IA para interpretar reportes telemétricos
+- **Fleet Telemetry Analyzer**: Sistema MCP de análisis avanzado de datos de combustible
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🏗️ Arquitectura General
+
+```
+ai-mini/
+├── backend/                    # API FastAPI con IA
+├── frontend/                   # Interfaz React/Next.js
+├── mcp/                        # Servidor MCP de análisis telemétrico
+├── docs/                       # Documentación detallada
+├── docker-compose.yml          # Orquestación de todos los servicios
+└── README.md                   # Este archivo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Componentes del Sistema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### 1. **Backend API** (Python + FastAPI)
+- **Propósito**: API RESTful con integración IA para interpretar reportes
+- **Tecnologías**: FastAPI, Groq API, Pydantic
+- **Puerto**: 8000
+- **Características**:
+  - Interpretación de reportes con IA según perfil de usuario
+  - Soporte para múltiples perfiles (Gerente, Operaciones)
+  - API REST con documentación automática
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### 2. **Frontend Web** (React + Next.js)
+- **Propósito**: Interfaz de usuario para interactuar con el sistema
+- **Tecnologías**: Next.js 16, React 19, TailwindCSS
+- **Puerto**: 3001
+- **Características**:
+  - Interfaz moderna y responsiva
+  - Visualización de datos telemétricos
+  - Integración con backend API
 
-## Learn More
+#### 3. **MCP Server** (Python)
+- **Propósito**: Servidor Model Context Protocol para análisis avanzado
+- **Tecnologías**: Python 3.12, MCP SDK, Pydantic
+- **Características**:
+  - Análisis de rendimiento de combustible
+  - Detección de anomalías y patrones sospechosos
+  - Comparación multiempresa
+  - Integración con LLMs vía MCP
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Inicio Rápido
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Requisitos Previos
 
-## Deploy on Vercel
+- **Docker Desktop** instalado y corriendo
+- **API Key de Groq** (gratuita en https://console.groq.com/keys)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Configuración Inicial
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Configurar API Key de Groq**:
+```bash
+cp backend/.env.example backend/.env
+# Editar backend/.env con tu API key
+```
+
+2. **Levantar todos los servicios**:
+```bash
+docker-compose up --build
+```
+
+### Accesos
+
+- **Frontend Web**: http://localhost:3001
+- **Backend API**: http://localhost:8000
+- **Documentación API**: http://localhost:8000/docs
+- **MCP Server**: Disponible vía stdio (ver documentación MCP)
+
+---
+
+## 📋 Servicios Disponibles
+
+### Servicios Principales (siempre activos)
+
+```bash
+# Iniciar todos los servicios
+docker-compose up -d
+
+# Ver estado de los servicios
+docker-compose ps
+
+# Ver logs de un servicio específico
+docker-compose logs -f frontend
+docker-compose logs -f backend
+```
+
+### Servicios MCP (bajo demanda)
+
+```bash
+# Analizar datos telemétricos
+docker-compose up mcp-analyzer
+
+# Iniciar servidor MCP para LLMs
+docker-compose up mcp-server
+
+# Ejecutar tests del MCP
+docker-compose up mcp-tests
+```
+
+---
+
+## 📚 Documentación Detallada
+
+### Documentación Principal
+- [**Arquitectura del Sistema**](docs/architecture.md) - Diseño y flujo de datos
+- [**Guía de Desarrollo**](docs/development.md) - Configuración para desarrolladores
+- [**API Reference**](docs/api-reference.md) - Documentación completa de APIs
+- [**MCP Server Guide**](docs/mcp-server.md) - Uso del servidor MCP
+
+### Guías Específicas
+- [**Backend API**](docs/backend.md) - Desarrollo y configuración del backend
+- [**Frontend Web**](docs/frontend.md) - Desarrollo de la interfaz
+- [ **Análisis Telemétrico**](docs/telemetry-analysis.md) - Funcionalidades del MCP
+- [**Docker y Despliegue**](docs/docker-deployment.md) - Guía de contenerización
+
+---
+
+## 🔧 Tecnologías Utilizadas
+
+### Backend
+- **Python 3.12** - Lenguaje principal
+- **FastAPI 0.115** - Framework API
+- **Groq API** - Servicios de IA (gratuito)
+- **Pydantic 2.9** - Validación de datos
+- **Uvicorn** - Servidor ASGI
+
+### Frontend
+- **Next.js 16.1** - Framework React
+- **React 19.2** - Librería UI
+- **TypeScript** - Tipado estático
+- **TailwindCSS 4** - Framework CSS
+- **Chart.js/Recharts** - Visualización
+
+### MCP Server
+- **Python 3.12** - Lenguaje principal
+- **MCP SDK** - Model Context Protocol
+- **Pydantic 2.0** - Modelos de datos
+- **pytest** - Testing
+
+### Infraestructura
+- **Docker** - Contenerización
+- **Docker Compose** - Orquestación
+- **Multi-stage builds** - Optimización de imágenes
+
+---
+
+## 🎯 Casos de Uso
+
+### 1. **Interpretación de Reportes con IA**
+- Carga reportes telemétricos JSON
+- Selecciona perfil de usuario (Gerente/Operaciones)
+- Obtén análisis personalizado con IA
+
+### 2. **Análisis Avanzado de Combustible**
+- Detección de anomalías en consumo
+- Análisis de patrones sospechosos
+- Comparación entre períodos y empresas
+
+### 3. **Integración con LLMs**
+- Usa el servidor MCP para integración con asistentes IA
+- Herramientas de análisis disponibles para LLMs
+- Procesamiento de datos telemétricos automatizado
+
+---
+
+## 📊 Flujo de Datos
+
+```
+Reporte Telemétrico (JSON)
+    ↓
+Frontend Web (Upload)
+    ↓
+Backend API (FastAPI)
+    ↓
+┌─────────────────┬─────────────────┐
+│   IA Analysis   │  MCP Analysis   │
+│   (Groq API)    │  (Local AI)     │
+└─────────────────┴─────────────────┘
+    ↓                     ↓
+Interpretación          Análisis
+Personalizada          Técnico
+    ↓                     ↓
+Resultes Combinados → Dashboard Usuario
+```
+
+---
+
+## 🛠️ Desarrollo
+
+### Estructura de Carpetas
+
+```
+ai-mini/
+├── backend/
+│   ├── app/
+│   │   ├── main.py           # Endpoints API
+│   │   ├── models.py         # Modelos Pydantic
+│   │   ├── prompts.py        # Prompts IA
+│   │   └── ai_service.py     # Servicio Groq
+│   ├── requirements.txt
+│   └── Dockerfile
+├── frontend/
+│   ├── src/
+│   │   ├── App.js           # Componente principal
+│   │   └── index.js         # Punto entrada
+│   ├── package.json
+│   └── Dockerfile
+├── mcp/
+│   ├── src/
+│   │   ├── models/          # Modelos telemétricos
+│   │   ├── analyzers/       # Análisis de datos
+│   │   ├── reports/         # Generación reportes
+│   │   └── mcp_server.py    # Servidor MCP
+│   ├── tests/               # Tests unitarios
+│   └── Dockerfile
+└── docs/                    # Documentación
+```
+
+### Scripts Útiles
+
+```bash
+# Desarrollo backend
+cd backend && uvicorn app.main:app --reload
+
+# Desarrollo frontend
+cd frontend && npm run dev
+
+# Desarrollo MCP
+cd mcp && python -m src.mcp_server
+
+# Tests
+cd mcp && python -m pytest tests/ -v
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Problemas Comunes
+
+1. **API Key de Groq no configurada**
+   - Verifica `backend/.env` contiene `GROQ_API_KEY`
+
+2. **Puertos en uso**
+   - Asegura puertos 8000 y 3001 estén libres
+   - Modifica `docker-compose.yml` si es necesario
+
+3. **Build fallido**
+   - Limpia caché Docker: `docker system prune -a`
+   - Reconstruye: `docker-compose build --no-cache`
+
+4. **Servicios no se comunican**
+   - Verifica nombres de contenedores en `docker-compose.yml`
+   - Revisa logs: `docker-compose logs`
+
+---
+
+## 📄 Licencia
+
+Proyecto de demostración para análisis telemétrico con IA.
+
+---
+
+## 🤝 Contribuciones
+
+1. Fork del proyecto
+2. Feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Abrir Pull Request
+
+---
+
+## 📞 Soporte
+
+Para dudas o soporte técnico:
+- Revisa la documentación en `/docs`
+- Abre un issue en el repositorio
+- Consulta los logs de Docker para diagnóstico

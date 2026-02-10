@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  # ─── CLI Analysis ───────────────────────────────────────
+  # Runs the full analysis pipeline on the sample data
+  analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fleet-analyzer
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    command: ["data/sample_report.json"]
+
+  # ─── MCP Server (stdio transport) ──────────────────────
+  # Starts the MCP server for integration with LLM clients
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fleet-mcp-server
+    entrypoint: ["python", "-m", "src.mcp_server"]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./data:/app/data
+
+  # ─── Test Runner ────────────────────────────────────────
+  # Runs the test suite
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fleet-tests
+    entrypoint: ["python", "-m", "pytest"]
+    command: ["tests/", "-v", "--tb=short"]
+    volumes:
+      - ./data:/app/data

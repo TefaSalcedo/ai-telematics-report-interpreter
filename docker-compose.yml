@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   # ---- Backend: Python + FastAPI ----
   backend:
@@ -27,7 +29,8 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - REACT_APP_API_URL=https://nnrkb4ps-8000.use.devtunnels.ms
+      - REACT_APP_API_URL=http://localhost:8000
+      #       - REACT_APP_API_URL=https://nnrkb4ps-8000.use.devtunnels.ms
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
       - WDS_SOCKET_PORT=3001
@@ -37,3 +40,44 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+  # ─── MCP CLI Analysis ───────────────────────────────────────
+  # Runs the full analysis pipeline on the sample data
+  mcp-analyzer:
+    build:
+      context: ./mcp
+      dockerfile: Dockerfile
+    container_name: fleet-analyzer
+    volumes:
+      - ./mcp/data:/app/data
+      - ./mcp/output:/app/output
+    command: ["data/sample_report.json"]
+    depends_on:
+      - backend
+
+  # ─── MCP Server (stdio transport) ──────────────────────
+  # Starts the MCP server for integration with LLM clients
+  mcp-server:
+    build:
+      context: ./mcp
+      dockerfile: Dockerfile
+    container_name: fleet-mcp-server
+    entrypoint: ["python", "-m", "src.mcp_server"]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./mcp/data:/app/data
+    depends_on:
+      - backend
+
+  # ─── MCP Test Runner ────────────────────────────────────────
+  # Runs the test suite
+  mcp-tests:
+    build:
+      context: ./mcp
+      dockerfile: Dockerfile
+    container_name: fleet-tests
+    entrypoint: ["python", "-m", "pytest"]
+    command: ["tests/", "-v", "--tb=short"]
+    volumes:
+      - ./mcp/data:/app/data
