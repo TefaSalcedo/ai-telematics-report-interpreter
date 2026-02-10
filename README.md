@@ -5,6 +5,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 Este proyecto unifica dos componentes principales:
 - **AI Telematics Interpreter**: Interfaz web con IA para interpretar reportes telemétricos
 - **Fleet Telemetry Analyzer**: Sistema MCP de análisis avanzado de datos de combustible
+<img width="833" height="718" alt="image" src="https://github.com/user-attachments/assets/777043a7-1b5d-42db-99ba-05f85d0f9c29" />
 
 ---
 
